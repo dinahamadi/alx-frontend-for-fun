@@ -13,7 +13,7 @@ def parse_markdown_to_html(markdown_file, html_file):
     """Parse Markdown file and convert to HTML."""
     try:
         with open(markdown_file, 'r') as md_file, \
-              open(html_file, 'w') as html_f:
+              open(html_file, 'a') as html_f:
             in_list = False
             is_ordered_list = False
             for line in md_file:
