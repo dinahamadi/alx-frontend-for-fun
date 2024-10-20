@@ -3,10 +3,30 @@
 This script takes 2 arguments:
 First argument is the name of the Markdown file.
 Second argument is the output file name.
+markdown the content of first file into the second
 """
 
 import sys
 import os
+
+
+def parse_markdown_to_html(markdown_file, html_file):
+    try:
+        with open(markdown_file, 'r') as md_file, \
+                open(html_file, 'w') as html_f:
+            for line in md_file:
+                line = line.strip()
+                if line.startswith('#'):
+                    heading_level = len(line.split()[0])
+                    if heading_level <= 6:
+                        heading_content = line[heading_level:].strip()
+                        html_f.write(
+                            "<h{0}>{1}</h{0}>\n".format(
+                                heading_level, heading_content)
+                            )
+    except FileNotFoundError:
+        sys.stderr.write("Missing {}\n".format(markdown_file))
+        sys.exit(1)
 
 
 def main():
@@ -16,12 +36,8 @@ def main():
 
     markdown_file = sys.argv[1]
     html_file = sys.argv[2]
-    try:
-        with open(markdown_file, 'r') as f:
-            pass
-    except FileNotFoundError:
-        sys.stderr.write("Missing {}\n".format(markdown_file))
-        sys.exit(1)
+    parse_markdown_to_html(markdown_file, html_file)
+
     sys.exit(0)
 
 
