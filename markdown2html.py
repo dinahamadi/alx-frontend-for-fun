@@ -14,6 +14,7 @@ def parse_markdown_to_html(markdown_file, html_file):
     try:
         with open(markdown_file, 'r') as md_file, \
                 open(html_file, 'w') as html_f:
+            in_list = False
             for line in md_file:
                 line = line.strip()
                 if line.startswith('#'):
@@ -24,6 +25,19 @@ def parse_markdown_to_html(markdown_file, html_file):
                             "<h{0}>{1}</h{0}>\n".format(
                                 heading_level, heading_content)
                             )
+                    in_list = False
+                elif line.startswith('- '):
+                    if not in_list:
+                        html_f.write("<ul>\n")
+                        in_list = True
+                    list_item_content = line[2:].strip()
+                    html_f.write("    <li>{}</li>\n".format(list_item_content))
+                else:
+                    if in_list:
+                        html_f.write("</ul>\n")
+                        in_list = False
+            if in_list:
+                html_f.write("</ul>\n")
     except FileNotFoundError:
         sys.stderr.write("Missing {}\n".format(markdown_file))
         sys.exit(1)
