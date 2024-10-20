@@ -55,23 +55,24 @@ def parse_markdown_to_html(markdown_file, html_file):
                 html_f.write('</ol>\n' if is_ordered_list
                              else '</ul>\n')
     except FileNotFoundError:
-        sys.stderr.write('Missing {}\n'.format(markdown_file))
-        sys.exit(1)
+        print('Missing {}'.format(markdown_file), file=sys.stderr)
+        exit(1)
 
 
 def main():
     if len(sys.argv) < 3:
-        sys.stderr.write('Usage: ./markdown2html.py README.md '
-                         'README.html\n')
-        sys.exit(1)
+       print('Usage: ./markdown2html.py README.md README.html',
+              file=sys.stderr)
+       exit(1)
+
     markdown_file = sys.argv[1]
     html_file = sys.argv[2]
     if not os.path.isfile(markdown_file):
-        sys.stderr.write('Missing {}\n'.format(markdown_file))
-        sys.exit(1)
+        print('Missing {}'.format(markdown_file), file=sys.stderr)
+        exit(1)
     parse_markdown_to_html(markdown_file, html_file)
-    sys.exit(0)
+    exit(0)
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     main()
