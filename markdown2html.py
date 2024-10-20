@@ -11,6 +11,8 @@ import os
 
 
 def parse_markdown_to_html(markdown_file, html_file):
+    """Parse Markdown file and convert to HTML."""
+
     try:
         with open(markdown_file, 'r') as md_file, \
                 open(html_file, 'w') as html_f:
@@ -19,14 +21,20 @@ def parse_markdown_to_html(markdown_file, html_file):
             for line in md_file:
                 line = line.strip()
                 if line.startswith('#'):
+                    if in_list:
+                        # Close any open list before a heading
+                        if is_ordered_list:
+                            html_f.write("</ol>\n")
+                        else:
+                            html_f.write("</ul>\n")
+                        in_list = False
                     heading_level = len(line.split()[0])
                     if heading_level <= 6:
                         heading_content = line[heading_level:].strip()
                         html_f.write(
                             "<h{0}>{1}</h{0}>\n".format(
                                 heading_level, heading_content)
-                            )
-                    in_list = False
+                        )
                 elif line.startswith('- '):
                     if not in_list or is_ordered_list:
                         if is_ordered_list:
@@ -57,6 +65,7 @@ def parse_markdown_to_html(markdown_file, html_file):
                     html_f.write("</ol>\n")
                 else:
                     html_f.write("</ul>\n")
+
     except FileNotFoundError:
         sys.stderr.write("Missing {}\n".format(markdown_file))
         sys.exit(1)
