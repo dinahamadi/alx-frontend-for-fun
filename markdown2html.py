@@ -62,7 +62,7 @@ def parse_markdown_to_html(markdown_file, html_file):
 def main():
     if len(sys.argv) < 3:
         sys.stderr.write('Usage: ./markdown2html.py README.md '
-                         'README.html\n', file=sys.stderr)
+                         'README.html\n')
         sys.exit(1)
     markdown_file = sys.argv[1]
     html_file = sys.argv[2]
