@@ -15,6 +15,7 @@ def parse_markdown_to_html(markdown_file, html_file):
         with open(markdown_file, 'r') as md_file, \
                 open(html_file, 'w') as html_f:
             in_list = False
+            is_ordered_list = False
             for line in md_file:
                 line = line.strip()
                 if line.startswith('#'):
@@ -27,17 +28,35 @@ def parse_markdown_to_html(markdown_file, html_file):
                             )
                     in_list = False
                 elif line.startswith('- '):
-                    if not in_list:
+                    if not in_list or is_ordered_list:
+                        if is_ordered_list:
+                            html_f.write("</ol>\n")
                         html_f.write("<ul>\n")
                         in_list = True
+                        is_ordered_list = False
+                    list_item_content = line[2:].strip()
+                    html_f.write("    <li>{}</li>\n".format(list_item_content))
+                elif line.startswith('* '):
+                    if not in_list or not is_ordered_list:
+                        if not is_ordered_list:
+                            html_f.write("</ul>\n")
+                        html_f.write("<ol>\n")
+                        in_list = True
+                        is_ordered_list = True
                     list_item_content = line[2:].strip()
                     html_f.write("    <li>{}</li>\n".format(list_item_content))
                 else:
                     if in_list:
-                        html_f.write("</ul>\n")
+                        if is_ordered_list:
+                            html_f.write("</ol>\n")
+                        else:
+                            html_f.write("</ul>\n")
                         in_list = False
             if in_list:
-                html_f.write("</ul>\n")
+                if is_ordered_list:
+                    html_f.write("</ol>\n")
+                else:
+                    html_f.write("</ul>\n")
     except FileNotFoundError:
         sys.stderr.write("Missing {}\n".format(markdown_file))
         sys.exit(1)
