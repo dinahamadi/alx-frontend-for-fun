@@ -4,6 +4,7 @@ This script takes 2 arguments:
 First argument is the name of the Markdown file.
 Second argument is the output file name.
 markdown the first md file into the second html file
+
 """
 
 import sys
