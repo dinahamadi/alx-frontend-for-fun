@@ -13,7 +13,7 @@ def parse_markdown_to_html(markdown_file, html_file):
     """Parse Markdown file and convert to HTML."""
     try:
         with open(markdown_file, 'r') as md_file, \
-              open(html_file, 'w') as html_f:
+              open(html_file, 'a') as html_f:
             in_list = False
             is_ordered_list = False
             for line in md_file:
@@ -67,7 +67,7 @@ def main():
 
     markdown_file = sys.argv[1]
     html_file = sys.argv[2]
-    if not os.path.isfile(markdown_file):
+    if not os.path.exists(markdown_file):
         print('Missing {}'.format(markdown_file), file=sys.stderr)
         exit(1)
     parse_markdown_to_html(markdown_file, html_file)
