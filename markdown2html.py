@@ -3,7 +3,6 @@
 This script takes 2 arguments:
 First argument is the name of the Markdown file.
 Second argument is the output file name.
-markdown the first md file into the second html file
 """
 
 import sys
@@ -16,29 +15,21 @@ def parse_markdown_to_html(markdown_file, html_file):
             open(html_file, 'w') as html_f:
         in_list = False
         is_ordered_list = False
-        in_paragraph = False
         for line in md_file:
             line = line.strip()
             if line.startswith('#'):
                 if in_list:
-                    html_f.write('</ol>\n' if is_ordered_list
-                                 else '</ul>\n')
+                    html_f.write('</ol>\n' if is_ordered_list else '</ul>\n')
                     in_list = False
-                if in_paragraph:
-                    html_f.write('</p>\n')
-                    in_paragraph = False
                 heading_level = len(line.split()[0])
                 if heading_level <= 6:
                     heading_content = line[heading_level:].strip()
                     html_f.write('<h{0}>{1}</h{0}>\n'.format(
-                        heading_level, heading_content))
+                                 heading_level, heading_content))
             elif line.startswith('- '):
                 if not in_list or is_ordered_list:
                     if is_ordered_list:
                         html_f.write('</ol>\n')
-                    if in_paragraph:
-                        html_f.write('</p>\n')
-                        in_paragraph = False
                     html_f.write('<ul>\n')
                     in_list = True
                     is_ordered_list = False
@@ -48,9 +39,6 @@ def parse_markdown_to_html(markdown_file, html_file):
                 if not in_list or not is_ordered_list:
                     if not is_ordered_list:
                         html_f.write('</ul>\n')
-                    if in_paragraph:
-                        html_f.write('</p>\n')
-                        in_paragraph = False
                     html_f.write('<ol>\n')
                     in_list = True
                     is_ordered_list = True
@@ -58,18 +46,13 @@ def parse_markdown_to_html(markdown_file, html_file):
                 html_f.write('    <li>{}</li>\n'.format(list_item_content))
             else:
                 if in_list:
-                    html_f.write('</ol>\n' if is_ordered_list
-                                 else '</ul>\n')
+                    html_f.write('</ol>\n' if is_ordered_list else '</ul>\n')
                     in_list = False
-                if not in_paragraph:
-                    html_f.write('<p>\n')
-                    in_paragraph = True
-                html_f.write('{}\n'.format(line))
+                if line:
+                    html_f.write('<p>{}</p>\n'.format(line))
+
         if in_list:
-            html_f.write('</ol>\n' if is_ordered_list
-                         else '</ul>\n')
-        if in_paragraph:
-            html_f.write('</p>\n')
+            html_f.write('</ol>\n' if is_ordered_list else '</ul>\n')
 
 
 if __name__ == "__main__":
