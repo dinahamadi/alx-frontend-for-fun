@@ -1,3 +1,14 @@
+#!/usr/bin/python3
+"""
+This script takes 2 arguments:
+First argument is the name of the Markdown file.
+Second argument is the output file name.
+"""
+
+import sys
+import os
+
+
 def parse_markdown_to_html(markdown_file, html_file):
     """Parse Markdown file and convert to HTML."""
     with open(markdown_file, 'r') as md_file, open(html_file, 'w') as html_f:
@@ -41,3 +52,17 @@ def parse_markdown_to_html(markdown_file, html_file):
 
         if in_list:
             html_f.write('</ol>\n' if is_ordered_list else '</ul>\n')
+
+
+if __name__ == "__main__":
+    if len(sys.argv) < 3:
+        print('Usage: ./markdown2html.py README.md README.html',
+              file=sys.stderr)
+        exit(1)
+    if not os.path.isfile(sys.argv[1]):
+        print('Missing {}'.format(sys.argv[1]), file=sys.stderr)
+        exit(1)
+    markdown_file = sys.argv[1]
+    html_file = sys.argv[2]
+    parse_markdown_to_html(markdown_file, html_file)
+    exit(0)
